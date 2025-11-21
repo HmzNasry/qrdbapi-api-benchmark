@@ -1,6 +1,6 @@
 {
   "config": {
-    "iterations": 1,
+    "iterations": 25,
     "remove_outliers": true,
     "timeout_seconds": 60
   },
