@@ -21,13 +21,17 @@ Activate venv (Windows):
 ```bash
 .venv\Scripts\activate
 ```
---
+
+---
+
 ### Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
---
+
+---
+
 ### Run Benchmarks
 
 Run all systems:
@@ -41,7 +45,9 @@ Run a specific system:
 ```bash
 python main.py start --system fastapi
 ```
---
+
+---
+
 ### Generate Charts
 
 Visualize latest run:
@@ -55,7 +61,9 @@ Visualize a specific file:
 ```bash
 python main.py visualize outputs/results_2025-11-21_14-00.json
 ```
---
+
+---
+
 ## Part 2: Configuration
 
 All configuration lives in `inputs/benchmarks.json`.
@@ -94,10 +102,11 @@ All configuration lives in `inputs/benchmarks.json`.
 ```
 
 * Use null to skip a system.
---
+
+---
+
 ## Part 3: File Structure
 
 * **inputs/benchmarks.json**: All configuration settings.
 * **outputs/**: Stores JSON results and HTML charts.
 * **main.py**: CLI entry point.
-
