@@ -2,6 +2,25 @@
 
 ## Part 1: Setup and Running
 
+### Virtual Environment
+
+Create venv:
+
+```bash
+python -m venv .venv
+```
+
+Activate venv (Linux/macOS):
+
+```bash
+source .venv/bin/activate
+```
+
+Activate venv (Windows):
+
+```bash
+.venv\Scripts\activate
+```
 ### Install Dependencies
 
 ```bash
