@@ -10,7 +10,6 @@ def generate_chart(json_path: str):
     with open(json_path, "r") as f:
         data = json.load(f)
 
-    # 1. Extract Data Structure
     scenarios = list(data.keys())
     
     # Get all unique systems present in the file
@@ -22,7 +21,6 @@ def generate_chart(json_path: str):
 
     fig = go.Figure()
 
-    # 2. Build Traces (One group of bars per System)
     for sys in systems:
         means = []
         hover_texts = []
@@ -55,8 +53,6 @@ def generate_chart(json_path: str):
             hovertext=hover_texts,
         ))
 
-    # 3. Layout Configuration
-    # Calculate height: at least 800px, or more if there are many scenarios
     dynamic_height = max(800, len(scenarios) * 30)
 
     fig.update_layout(
@@ -67,11 +63,9 @@ def generate_chart(json_path: str):
         height=dynamic_height,
         margin=dict(l=10, r=10, t=40, b=20),
         legend=dict(x=1, y=1),
-        # Invert Y axis so top scenarios are at the top of the chart
         yaxis=dict(autorange="reversed") 
     )
 
-    # 4. Save to HTML
     output_path = Path(json_path).with_suffix(".html")
     fig.write_html(str(output_path))
 

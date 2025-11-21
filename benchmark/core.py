@@ -4,9 +4,11 @@ import statistics
 import httpx
 from datetime import datetime
 from rich.console import Console
+from rich.text import Text
 from rich.table import Table
 from rich.progress import (
     Progress,
+    ProgressColumn,
     SpinnerColumn,
     BarColumn,
     TextColumn,
@@ -43,13 +45,24 @@ class BenchmarkRunner:
         }
 
         console.print(f"[bold green]Starting Benchmark ({self.config['iterations']} iter/req)[/bold green]")
+        
+
+        class PendingTimeColumn(ProgressColumn):
+            def render(self, task):
+                if task.completed == 0:
+                    return Text("--:--:--")
+                elapsed = task.elapsed or 0
+                minutes = int(elapsed // 60)
+                seconds = int(elapsed % 60)
+                ms = int((elapsed * 1000) % 1000)
+                return Text(f"{minutes:02d}:{seconds:02d}:{ms:03d}")
 
         with Progress(
             SpinnerColumn(),
             TextColumn("[progress.description]{task.description}"),
             BarColumn(),
             TextColumn("{task.percentage:>3.0f}%"),
-            TimeElapsedColumn(),
+            PendingTimeColumn(),
             transient=True,
         ) as progress:
             
@@ -59,21 +72,34 @@ class BenchmarkRunner:
                 
                 progress.console.print(f"[bold cyan]\nScenario: {scen_name}[/bold cyan]")
 
+                # 1. Identify Valid Systems & Create Tasks UP FRONT
+                system_tasks = {}
+                
                 for sys_name, base_url in active_systems.items():
                     endpoint = scenario["endpoints"].get(sys_name)
-
+                    
                     if not endpoint:
                         progress.console.print(f"  ⏭️  [dim]{sys_name}: SKIPPED (No endpoint)[/dim]")
                         results[scen_name][sys_name] = "SKIPPED"
                         continue
+                        
+                    task_id = progress.add_task(
+                        f"[magenta]{sys_name}[/magenta]", 
+                        total=self.config["iterations"]
+                    )
+                    system_tasks[sys_name] = {
+                        "task_id": task_id,
+                        "url": f"{base_url}{endpoint}"
+                    }
 
-                    full_url = f"{base_url}{endpoint}"
-                    task_id = progress.add_task(f"[magenta]{sys_name}[/magenta]", total=self.config["iterations"])
-                    
-                    times = []
-                    errors = []
+                with httpx.Client(timeout=self.config["timeout_seconds"]) as client:
+                    for sys_name, info in system_tasks.items():
+                        full_url = info["url"]
+                        task_id = info["task_id"]
+                        
+                        times = []
+                        errors = []
 
-                    with httpx.Client(timeout=self.config["timeout_seconds"]) as client:
                         for _ in range(self.config["iterations"]):
                             duration, error = fetch_url(client, full_url)
                             if duration is not None:
@@ -82,28 +108,29 @@ class BenchmarkRunner:
                                 errors.append(error)
                             progress.advance(task_id)
 
-                    progress.remove_task(task_id)
-
-                    stats = calculate_stats(times, self.config["remove_outliers"])
-                    
-                    if stats:
-                        progress.console.print(
-                            f"  ✅ [green]{sys_name:<10}[/green] "
-                            f"Avg: [bold]{stats['mean']:.4f}s[/bold] | "
-                            f"P99: {stats['p99']:.4f}s | "
-                            f"Min: {stats['min']:.4f}s"
-                        )
-                        results[scen_name][sys_name] = stats
-                        summary_data[sys_name]["means"].append(stats["mean"])
-                    else:
-                        primary_error = max(set(errors), key=errors.count) if errors else "Unknown Error"
-                        progress.console.print(f"  ❌ [red]{sys_name:<10}[/red] FAILED: {primary_error}")
-                        results[scen_name][sys_name] = {"error": primary_error}
+                        stats = calculate_stats(times, self.config["remove_outliers"])
                         
-                        summary_data[sys_name]["failures"].append({
-                            "scenario": scen_name,
-                            "error": primary_error
-                        })
+                        if stats:
+                            progress.console.print(
+                                f"  ✅ [green]{sys_name:<10}[/green] "
+                                f"Avg: [bold]{stats['mean']:.4f}s[/bold] | "
+                                f"P99: {stats['p99']:.4f}s | "
+                                f"Min: {stats['min']:.4f}s"
+                            )
+                            results[scen_name][sys_name] = stats
+                            summary_data[sys_name]["means"].append(stats["mean"])
+                        else:
+                            primary_error = max(set(errors), key=errors.count) if errors else "Unknown Error"
+                            progress.console.print(f"  ❌ [red]{sys_name:<10}[/red] FAILED: {primary_error}")
+                            results[scen_name][sys_name] = {"error": primary_error}
+                            
+                            summary_data[sys_name]["failures"].append({
+                                "scenario": scen_name,
+                                "error": primary_error
+                            })
+
+                for info in system_tasks.values():
+                    progress.remove_task(info["task_id"])
 
         self._save_results(results, timestamp)
         self._print_summary(summary_data)
@@ -121,7 +148,7 @@ class BenchmarkRunner:
     def _print_summary(self, summary_data: dict):
         has_any_failures = any(len(d["failures"]) > 0 for d in summary_data.values())
 
-        table = Table(title="\n🏆 Final Benchmark Conclusion", show_lines=True)
+        table = Table(title="\nBenchmark Results", show_lines=True)
         table.add_column("System", style="cyan", no_wrap=True)
         table.add_column("Scenarios Run", justify="right")
         table.add_column("Global Avg Latency", justify="right", style="green")
