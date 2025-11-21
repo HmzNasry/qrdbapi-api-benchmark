@@ -1,103 +1,103 @@
 {
   "config": {
-    "iterations": 1,
+    "iterations": 10,
     "remove_outliers": true,
     "timeout_seconds": 60
   },
   "systems": {
     "mm": "https://dbapimm.quranresearch.org",
-    "fastapi": "https://dbapi.quranresearch.org"
+    "fastapi": "http://localhost:8000"
   },
   "scenarios": [
     {
       "name": "MP.BBSchemes - Enumerate Schemes",
       "endpoints": {
-        "mm": null,
+        "mm": "/BBs/SchemeInfos",
         "fastapi": "/bb-schemes"
       }
     },
     {
       "name": "MP.BBForSchemePage - Page Boxes By Scheme",
       "endpoints": {
-        "mm": null,
+        "mm": "/BBs?bb-scheme-id=1&page-no=1",
         "fastapi": "/bb-schemes?bb_scheme_id=1&page_no=1"
       }
     },
     {
       "name": "MP.BBForMushafPage - Page Boxes By Mushaf",
       "endpoints": {
-        "mm": null,
+        "mm": "/BBs?mushaf-id=1&page-no=1",
         "fastapi": "/bb-schemes?mushaf_id=1&page_no=1"
       }
     },
     {
       "name": "MP.BBForSchemeAyah - Ayah Boxes By Number",
       "endpoints": {
-        "mm": null,
+        "mm": "/BBs?bb-scheme-id=1&ayah-no=1",
         "fastapi": "/bb-schemes?bb_scheme_id=1&ayah_no=1"
       }
     },
     {
       "name": "MP.BBForSchemeAyah - Ayah Boxes By Surah",
       "endpoints": {
-        "mm": null,
-        "fastapi": "/bb-schemes?bb_scheme_id=1&surah_no=1&ayah_no_in_surah=1"
+        "mm": "/BBs?bb-scheme-id=1&surah-no=1&ayah-no-in-surah=1",
+        "fastapi": "/bb-schemes?bb_scheme_id=1&surah_no=1&ayah_no_within_surah=1"
       }
     },
     {
       "name": "MP.BBForMushafAyah - Ayah Boxes By Mushaf Number",
       "endpoints": {
-        "mm": null,
+        "mm": "/BBs?mushaf-id=1&ayah-no=1",
         "fastapi": "/bb-schemes?mushaf_id=1&ayah_no=1"
       }
     },
     {
       "name": "MP.BBForMushafAyah - Ayah Boxes By Mushaf Surah",
       "endpoints": {
-        "mm": null,
-        "fastapi": "/bb-schemes?mushaf_id=1&surah_no=1&ayah_no_in_surah=1"
+        "mm": "/BBs?mushaf-id=1&surah-no=1&ayah-no-in-surah=1",
+        "fastapi": "/bb-schemes?mushaf_id=1&surah_no=1&ayah_no_within_surah=1"
       }
     },
     {
       "name": "MP.GetMushafs - All Printed Mushafs",
       "endpoints": {
-        "mm": null,
+        "mm": "/mushafs",
         "fastapi": "/mushafs"
       }
     },
     {
       "name": "MP.GetMushafs - Specific Mushaf",
       "endpoints": {
-        "mm": null,
+        "mm": "/mushafs?mushaf-id=1",
         "fastapi": "/mushafs?mushaf_id=1"
       }
     },
     {
       "name": "MP.GetMushafSurahPages - Surah Summary",
       "endpoints": {
-        "mm": null,
+        "mm": "/mushafs/surah-pages?mushaf-id=1",
         "fastapi": "/mushafs/surah-pages?mushaf_id=1"
       }
     },
     {
       "name": "MP.GetMushafSurahPages - Surah Range",
       "endpoints": {
-        "mm": null,
+        "mm": "/mushafs/surah-pages?mushaf-id=1&surah-no=1",
         "fastapi": "/mushafs/surah-pages?mushaf_id=1&surah_no=1"
       }
     },
     {
       "name": "MP.GetMushafAyahPages - Ayah Range",
       "endpoints": {
-        "mm": null,
+        "mm": "/mushafs/ayah-pages?mushaf-id=1&ayah-no=1",
         "fastapi": "/mushafs/ayah-pages?mushaf_id=1&ayah_no=1"
       }
     },
     {
       "name": "MP.GetMushafAyahPages - Surah Ayah Range",
       "endpoints": {
-        "mm": null,
-        "fastapi": "/mushafs/ayah-pages?mushaf_id=1&surah_no=1&ayah_no_in_surah=1"
+        "mm": "/mushafs/ayah-pages?mushaf-id=1&surah-no=1&ayah-no-in-surah=1",
+        "fastapi": "/mushafs/ayah-pages?mushaf_id=1&surah_no=1&ayah_no_within_surah=1"
       }
     },
     {
@@ -111,35 +111,35 @@
       "name": "MP.SwitchMushaf - Locate By Surah Ayah",
       "endpoints": {
         "mm": null,
-        "fastapi": "/mushafs/switch-mushaf?mushaf_id=1&target_mushaf_id=2&surah_no=1&ayah_no_in_surah=1"
+        "fastapi": "/mushafs/switch-mushaf?mushaf_id=1&target_mushaf_id=2&surah_no=1&ayah_no_within_surah=1"
       }
     },
     {
       "name": "MP.GetUnicodeAyah - Mushaf Ayah Text",
       "endpoints": {
-        "mm": null,
+        "mm": "/mushafs/unicodes?mushaf-id=1&ayah-no=1&font-adjust=true",
         "fastapi": "/mushafs/unicode-ayahs?mushaf_id=1&ayah_no=1&font_adjust=true"
       }
     },
     {
       "name": "MP.GetUnicodeAyah - Mushaf Surah Ayah Text",
       "endpoints": {
-        "mm": null,
-        "fastapi": "/mushafs/unicode-ayahs?mushaf_id=1&surah_no=1&ayah_no_in_surah=1&font_adjust=true"
+        "mm": "/mushafs/unicodes?mushaf-id=1&surah-no=1&ayah-no-in-surah=1&font-adjust=true",
+        "fastapi": "/mushafs/unicode-ayahs?mushaf_id=1&surah_no=1&ayah_no_within_surah=1&font_adjust=true"
       }
     },
     {
       "name": "UG.GetUnicodeAyah - Scheme Ayah Text",
       "endpoints": {
-        "mm": null,
+        "mm": "/unicodes/ayahs?counting-scheme=4&ayah-no=1&wajh-id=52&map-id=KFQC%20Hafs&font-adjust=true",
         "fastapi": "/mushafs/unicode-ayahs?counting_scheme=4&ayah_no=1&wajh_id=52&map_id=KFQC%20Hafs&font_adjust=true"
       }
     },
     {
       "name": "UG.GetUnicodeAyah - Scheme Surah Ayah Text",
       "endpoints": {
-        "mm": null,
-        "fastapi": "/mushafs/unicode-ayahs?counting_scheme=4&surah_no=1&ayah_no_in_surah=1&wajh_id=52&map_id=KFQC%20Hafs&font_adjust=true"
+        "mm": "/unicodes/ayahs?counting-scheme=4&surah-no=1&ayah-no-in-surah=1&wajh-id=52&map-id=KFQC%20Hafs&font-adjust=true",
+        "fastapi": "/mushafs/unicode-ayahs?counting_scheme=4&surah_no=1&ayah_no_within_surah=1&wajh_id=52&map_id=KFQC%20Hafs&font_adjust=true"
       }
     },
     {
@@ -257,28 +257,28 @@
     {
       "name": "QR.GetStreamAyahs - By Ayah Number",
       "endpoints": {
-        "mm": null,
+        "mm": "/stream/ayahs?counting-scheme=4&ayah-no=1",
         "fastapi": "/stream/ayahs?counting_scheme=4&ayah_no=1"
       }
     },
     {
       "name": "QR.GetStreamAyahs - By Surah Context",
       "endpoints": {
-        "mm": null,
-        "fastapi": "/stream/ayahs?counting_scheme=4&surah_no=1&ayah_no_in_surah=1"
+        "mm": "/stream/ayahs?counting-scheme=4&surah-no=1&ayah-no-in-surah=1",
+        "fastapi": "/stream/ayahs?counting_scheme=4&surah_no=1&ayah_no_within_surah=1"
       }
     },
     {
       "name": "QR.GetUpStreamAyahs - Word Lookup",
       "endpoints": {
-        "mm": null,
+        "mm": "/stream/ayahs?word-no=21",
         "fastapi": "/stream/ayahs?word_no=21"
       }
     },
     {
       "name": "QR.GetUpStreamAyahs - Word Lookup In Scheme",
       "endpoints": {
-        "mm": null,
+        "mm": "/stream/ayahs?word-no=21&counting-scheme=4",
         "fastapi": "/stream/ayahs?word_no=21&counting_scheme=4"
       }
     },
@@ -313,15 +313,15 @@
     {
       "name": "QR.SwitchCountingScheme - Locate Target Ayah By Number",
       "endpoints": {
-        "mm": null,
+        "mm": "/stream/ayahs/switch-counting-schemes?source-scheme=4&target-scheme=14&ayah-no=1",
         "fastapi": "/stream/ayahs/switch-counting-scheme?source_scheme_id=4&target_scheme_id=14&ayah_no=1"
       }
     },
     {
       "name": "QR.SwitchCountingScheme - Locate Target Ayah By Surah",
       "endpoints": {
-        "mm": null,
-        "fastapi": "/stream/ayahs/switch-counting-scheme?source_scheme_id=4&target_scheme_id=14&surah_no=1&ayah_no_in_surah=1"
+        "mm": "/stream/ayahs/switch-counting-schemes?source-scheme=4&target-scheme=14&surah-no=1&ayah-no-in-surah=1",
+        "fastapi": "/stream/ayahs/switch-counting-scheme?source_scheme_id=4&target_scheme_id=14&surah_no=1&ayah_no_within_surah=1"
       }
     },
     {
@@ -355,14 +355,14 @@
     {
       "name": "UG.GetUnicodeWord - Default Font Handling",
       "endpoints": {
-        "mm": null,
+        "mm": "/unicodes/words?word-no=1&wajh-id=50&map-id=KFQC%20Hafs",
         "fastapi": "/stream/unicode-words?word_no=1&wajh_id=50&map_id=KFQC%20Hafs"
       }
     },
     {
       "name": "UG.GetUnicodeWord - Font Hacks Enabled",
       "endpoints": {
-        "mm": null,
+        "mm": "/unicodes/words?word-no=1&wajh-id=50&map-id=KFQC%20Hafs&font-adjust=true",
         "fastapi": "/stream/unicode-words?word_no=1&wajh_id=50&map_id=KFQC%20Hafs&font_adjust=true"
       }
     },
