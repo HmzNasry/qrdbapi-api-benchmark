@@ -38,9 +38,10 @@ def visualize(
             console.print("[bold red]No 'outputs' directory found. Run a benchmark first![/bold red]")
             raise typer.Exit(1)
         
-        json_files = list(output_dir.glob("*.json"))
+        json_files = list(output_dir.glob("**/*.json"))
+        
         if not json_files:
-            console.print("[bold red]No JSON result files found in 'outputs/'.[/bold red]")
+            console.print("[bold red]No JSON result files found in 'outputs/' or its subdirectories.[/bold red]")
             raise typer.Exit(1)
         
         latest_file = max(json_files, key=os.path.getmtime)

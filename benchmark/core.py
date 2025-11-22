@@ -135,12 +135,16 @@ class BenchmarkRunner:
                 for info in system_tasks.values():
                     progress.remove_task(info["task_id"])
 
-        self._save_results(results, timestamp)
+        self._save_results(results, timestamp, list(active_systems.keys()))
         self._print_summary(summary_data)
 
-    def _save_results(self, results: dict, timestamp: str):
-        output_dir = "outputs"
+    def _save_results(self, results: dict, timestamp: str, system_names: list[str]):
+        # Create folder name: e.g., "node_vs_go" or "node_vs_python_vs_go"
+        folder_name = "_vs_".join(sorted(system_names))
+        
+        output_dir = os.path.join("outputs", folder_name)
         os.makedirs(output_dir, exist_ok=True)
+        
         path = f"{output_dir}/results_{timestamp}.json"
         
         with open(path, "w") as f:
@@ -204,4 +208,3 @@ class BenchmarkRunner:
                     console.print(f"[bold]{sys_name}[/bold]:")
                     for fail in data["failures"]:
                         console.print(f"  - {fail['scenario']}: [red]{fail['error']}[/red]")
-
